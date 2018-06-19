@@ -1,0 +1,122 @@
+version: '2'
+
+services:
+    client:
+        image: maestroserver/client-maestro
+        ports:
+        - "80:80"
+        environment:
+        - "API_URL=http://localhost:8888"
+        - "STATIC_URL=http://localhost:8888/static/"
+        depends_on:
+        - server    
+
+    server:
+        image: maestroserver/server-maestro
+        ports:
+        - "8888:8888"
+        environment:
+        - "MAESTRO_MONGO_URI=mongodb/maestro-client"
+        - "MAESTRO_DISCOVERY_URI=http://discovery:5000"
+        - "MAESTRO_REPORT_URI=http://reports:5005"
+        - "SMTP_PORT=25"
+        - "SMTP_HOST=maildev"
+        - "SMTP_SENDER=maestro@mysender.com"
+        - "SMTP_IGNORE=true"
+        depends_on:
+        - mongodb
+        - discovery
+        - reports 
+
+    discovery:
+        image: maestroserver/discovery-maestro
+        ports:
+        - "5000:5000"
+        environment:
+        - "CELERY_BROKER_URL=amqp://rabbitmq:5672"
+        - "MAESTRO_DATA_URI=http://data:5010"
+        depends_on:
+        - rabbitmq
+        - data
+
+    discovery_worker:
+        image: maestroserver/discovery-maestro-celery
+        environment:
+        - "MAESTRO_DATA_URI=http://data:5010"
+        - "CELERY_BROKER_URL=amqp://rabbitmq:5672" 
+        depends_on:
+        - rabbitmq
+        - data
+
+    reports:
+        image: maestroserver/reports-maestro
+        environment:
+        - "CELERY_BROKER_URL=amqp://rabbitmq:5672"
+        - "MAESTRO_MONGO_URI=mongodb"
+        - "MAESTRO_MONGO_DATABASE=maestro-reports"
+        depends_on:
+        - rabbitmq
+        - mongodb
+
+    reports_worker:
+        image: maestroserver/reports-maestro-celery
+        environment:
+        - "MAESTRO_REPORT_URI=http://reports:5005"
+        - "MAESTRO_DATA_URI=http://data:5010"
+        - "CELERY_BROKER_URL=amqp://rabbitmq:5672"
+        depends_on:
+        - rabbitmq
+        - data
+
+    scheduler:
+        image: maestroserver/scheduler-maestro
+        environment:
+        - "MAESTRO_DATA_URI=http://data:5010"
+        - "CELERY_BROKER_URL=amqp://rabbitmq:5672"
+        - "MAESTRO_MONGO_URI=mongodb"
+        - "MAESTRO_MONGO_DATABASE=maestro-client"
+        depends_on:
+        - mongodb
+        - rabbitmq
+
+    scheduler_worker:
+        image: maestroserver/scheduler-maestro-celery
+        environment:
+        - "MAESTRO_DATA_URI=http://data:5010"
+        - "CELERY_BROKER_URL=amqp://rabbitmq:5672"
+        depends_on:
+        - rabbitmq
+        - data  
+
+    data:
+        image: maestroserver/data-maestro
+        environment:
+        - "MAESTRO_MONGO_URI=mongodb"
+        - "MAESTRO_MONGO_DATABASE=maestro-client"
+        depends_on:
+        - mongodb
+
+    rabbitmq:
+        hostname: "discovery-rabbit"
+        image: rabbitmq:3-management
+        ports:
+        - "15672:15672"
+        - "5672:5672"
+        
+    mongodb:
+        image: mongo
+        volumes:
+        - mongodata:/data/db
+        ports:
+        - "27017:27017"
+
+    maildev:
+        image: djfarrelly/maildev
+        mem_limit: 80m
+        ports:
+        - "1025:25"
+        - "1080:80"
+
+
+volumes:
+    mongodata: {}
