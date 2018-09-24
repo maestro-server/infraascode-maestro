@@ -2,7 +2,7 @@ version: '2'
 
 services:
     client:
-        image: maestroserver/client-maestro
+        image: maestroserver/client-maestro:analytics
         ports:
         - "80:80"
         environment:
@@ -12,13 +12,15 @@ services:
         - server    
 
     server:
-        image: maestroserver/server-maestro
+        image: maestroserver/server-maestro:analytics
         ports:
         - "8888:8888"
         environment:
         - "MAESTRO_MONGO_URI=mongodb/maestro-client"
         - "MAESTRO_DISCOVERY_URI=http://discovery:5000"
         - "MAESTRO_REPORT_URI=http://reports:5005"
+        - "MAESTRO_ANALYTICS_URI=http://analytics:5020"
+        - "MAESTRO_ANALYTICS_FRONT_URI=http://analytics_front:9999"
         - "SMTP_PORT=25"
         - "SMTP_HOST=maildev"
         - "SMTP_SENDER=maestro@mysender.com"
@@ -88,8 +90,36 @@ services:
         - rabbitmq
         - data  
 
+    analytics:
+        image: maestroserver/analytics-maestro
+        ports:
+        - "5020:5020"
+        environment:
+        - "CELERY_BROKER_URL=amqp://rabbitmq:5672"
+        - "MAESTRO_DATA_URI=http://data:5010"
+        depends_on:
+        - rabbitmq
+        - data
+
+    analytics_worker:
+        image: maestroserver/analytics-maestro-celery
+        environment:
+        - "MAESTRO_DATA_URI=http://data:5010"
+        - "MAESTRO_ANALYTICS_FRONT_URI=http://analytics_front:9999"
+        - "CELERY_BROKER_URL=amqp://rabbitmq:5672" 
+        depends_on:
+        - rabbitmq
+        - data
+
+    analytics_front:
+        image: maestroserver/analytics-front-maestro
+        ports:
+        - "9999:9999"
+        environment:
+        - "MAESTRO_MONGO_URI=mongodb/maestro-client"
+
     data:
-        image: maestroserver/data-maestro
+        image: maestroserver/data-maestro:analytics
         environment:
         - "MAESTRO_MONGO_URI=mongodb"
         - "MAESTRO_MONGO_DATABASE=maestro-client"
@@ -108,7 +138,7 @@ services:
         volumes:
         - mongodata:/data/db
         ports:
-        - "27017:27017"
+        - "27018:27017"
 
     maildev:
         image: djfarrelly/maildev
