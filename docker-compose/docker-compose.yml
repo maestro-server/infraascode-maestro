@@ -2,25 +2,28 @@ version: '2'
 
 services:
     client:
-        image: maestroserver/client-maestro:analytics
+        image: maestroserver/client-maestro
         ports:
         - "80:80"
         environment:
         - "API_URL=http://localhost:8888"
         - "STATIC_URL=http://localhost:8888/static/"
+        - "ANALYTICS_URL=http://localhost:9999"
+        - "WEBSOCKET_URL=ws://localhost:8000"
         depends_on:
         - server    
 
     server:
-        image: maestroserver/server-maestro:analytics
+        image: maestroserver/server-maestro
         ports:
         - "8888:8888"
         environment:
-        - "MAESTRO_MONGO_URI=mongodb/maestro-client"
+        - "MAESTRO_MONGO_URI=mongodb"
+        - "MAESTRO_MONGO_DATABASE=maestro-client"
         - "MAESTRO_DISCOVERY_URI=http://discovery:5000"
         - "MAESTRO_REPORT_URI=http://reports:5005"
         - "MAESTRO_ANALYTICS_URI=http://analytics:5020"
-        - "MAESTRO_ANALYTICS_FRONT_URI=http://analytics_front:9999"
+        - "MAESTRO_AUDIT_URI=http://audit:10900"
         - "SMTP_PORT=25"
         - "SMTP_HOST=maildev"
         - "SMTP_SENDER=maestro@mysender.com"
@@ -45,7 +48,9 @@ services:
         image: maestroserver/discovery-maestro-celery
         environment:
         - "MAESTRO_DATA_URI=http://data:5010"
-        - "CELERY_BROKER_URL=amqp://rabbitmq:5672" 
+        - "MAESTRO_WEBSOCKET_URI=http://ws:8000"
+        - "CELERY_BROKER_URL=amqp://rabbitmq:5672"
+        - "MAESTRO_AUDIT_URI=http://audit:10900"
         depends_on:
         - rabbitmq
         - data
@@ -65,7 +70,9 @@ services:
         environment:
         - "MAESTRO_REPORT_URI=http://reports:5005"
         - "MAESTRO_DATA_URI=http://data:5010"
+        - "MAESTRO_WEBSOCKET_URI=http://ws:8000"
         - "CELERY_BROKER_URL=amqp://rabbitmq:5672"
+        - "MAESTRO_AUDIT_URI=http://audit:10900"
         depends_on:
         - rabbitmq
         - data
@@ -85,10 +92,13 @@ services:
         image: maestroserver/scheduler-maestro-celery
         environment:
         - "MAESTRO_DATA_URI=http://data:5010"
+        - "MAESTRO_DISCOVERY_URI=http://discovery:5000"
+        - "MAESTRO_ANALYTICS_URI=http://analytics:5020"
+        - "MAESTRO_REPORT_URI=http://reports:5005"
         - "CELERY_BROKER_URL=amqp://rabbitmq:5672"
         depends_on:
         - rabbitmq
-        - data  
+        - data
 
     analytics:
         image: maestroserver/analytics-maestro
@@ -97,6 +107,7 @@ services:
         environment:
         - "CELERY_BROKER_URL=amqp://rabbitmq:5672"
         - "MAESTRO_DATA_URI=http://data:5010"
+        - "MAESTRO_AUDIT_URI=http://audit:10900"
         depends_on:
         - rabbitmq
         - data
@@ -106,6 +117,7 @@ services:
         environment:
         - "MAESTRO_DATA_URI=http://data:5010"
         - "MAESTRO_ANALYTICS_FRONT_URI=http://analytics_front:9999"
+        - "MAESTRO_WEBSOCKET_URI=http://ws:8000"
         - "CELERY_BROKER_URL=amqp://rabbitmq:5672" 
         depends_on:
         - rabbitmq
@@ -116,7 +128,8 @@ services:
         ports:
         - "9999:9999"
         environment:
-        - "MAESTRO_MONGO_URI=mongodb/maestro-client"
+        - "MAESTRO_MONGO_URI=mongodb"
+        - "MAESTRO_MONGO_DATABASE=maestro-client"
 
     data:
         image: maestroserver/data-maestro
@@ -134,6 +147,11 @@ services:
         - "MAESTRO_DATA_URI=http://data:5010"
         depends_on:
         - mongodb
+
+    ws:
+        image: maestroserver/websocket-maestro
+        ports:
+        - "8000:8000"
 
     rabbitmq:
         hostname: "discovery-rabbit"
