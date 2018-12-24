@@ -119,10 +119,19 @@ services:
         - "MAESTRO_MONGO_URI=mongodb/maestro-client"
 
     data:
-        image: maestroserver/data-maestro:analytics
+        image: maestroserver/data-maestro
         environment:
         - "MAESTRO_MONGO_URI=mongodb"
         - "MAESTRO_MONGO_DATABASE=maestro-client"
+        depends_on:
+        - mongodb
+
+    audit:
+        image: maestroserver/audit-maestro
+        environment:
+        - "MAESTRO_MONGO_URI=mongodb"
+        - "MAESTRO_MONGO_DATABASE=maestro-audit"
+        - "MAESTRO_DATA_URI=http://data:5010"
         depends_on:
         - mongodb
 
