@@ -140,7 +140,7 @@ services:
         - mongodb
 
     audit:
-        image: maestroserver/audit-maestro
+        image: maestroserver/audit-app-maestro
         environment:
         - "MAESTRO_MONGO_URI=mongodb"
         - "MAESTRO_MONGO_DATABASE=maestro-audit"
