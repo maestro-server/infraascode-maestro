@@ -1,0 +1,27 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata: 
+  name: maestro-client
+spec:
+  replicas: 1
+  template: 
+    metadata: 
+      labels:
+        app: maestro-client
+    spec:
+      containers:
+      - name: maestro-client
+        image: maestroserver/client-maestro
+        ports: 
+        - name: mclient-port
+          containerPort: 80
+        env:
+        - name: API_URL
+          value: "http://localhost:31241"
+        resources:
+          requests:
+            cpu: 100m
+            memory: 0.1Gi
+          limits:
+            cpu: 300m
+            memory: 0.3Gi

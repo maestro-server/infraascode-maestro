@@ -1,0 +1,29 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata: 
+  name: maestro-server
+spec:
+  replicas: 1
+  template: 
+    metadata: 
+      labels:
+        app: maestro-server
+    spec:
+      containers:
+      - name: maestro-server
+        image: maestroserver/server-maestro
+        ports: 
+        - name: mserver-port
+          containerPort: 8888
+        env:
+          - name: MAESTRO_MONGO_URI
+            value: "mongodb://mongo:27017"
+          - name: MAESTRO_MONGO_DATABASE
+            value: "maestro-client"
+        resources:
+          requests:
+            cpu: 100m
+            memory: 0.1Gi
+          limits:
+            cpu: 300m
+            memory: 0.5Gi
