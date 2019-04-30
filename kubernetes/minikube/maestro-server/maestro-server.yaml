@@ -20,6 +20,8 @@ spec:
             value: "mongodb://mongo:27017"
           - name: MAESTRO_MONGO_DATABASE
             value: "maestro-client"
+          - name: MAESTRO_DISCOVERY_URI
+            value: "http://maestro-discovery-svc:5000"
         resources:
           requests:
             cpu: 100m

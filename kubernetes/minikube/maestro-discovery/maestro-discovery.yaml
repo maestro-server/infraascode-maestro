@@ -1,29 +1,29 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata: 
-  name: maestro-server
+  name: maestro-discovery
 spec:
   replicas: 1
   template: 
     metadata: 
       labels:
-        app: maestro-server
+        app: maestro-discovery
     spec:
       containers:
-      - name: maestro-server
-        image: maestroserver/server-maestro
+      - name: maestro-discovery
+        image: maestroserver/discovery-maestro
         ports: 
-        - name: mserver-port
-          containerPort: 8888
+        - name: mdiscovery-port
+          containerPort: 5000
         env:
-          - name: MAESTRO_MONGO_URI
-            value: "mongodb://mongo:27017"
-          - name: MAESTRO_MONGO_DATABASE
-            value: "maestro-client"
+          - name: CELERY_BROKER_URL
+            value: "amqp://rabbitmq:5672"
+          - name: MAESTRO_DATA_URI
+            value: "http://maestro-data-svc:5010"
         resources:
           requests:
             cpu: 100m
             memory: 0.1Gi
           limits:
-            cpu: 300m
-            memory: 0.5Gi
+            cpu: 600m
+            memory: 1Gi

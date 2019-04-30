@@ -1,20 +1,20 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata: 
-  name: maestro-server
+  name: maestro-data
 spec:
   replicas: 1
   template: 
     metadata: 
       labels:
-        app: maestro-server
+        app: maestro-data
     spec:
       containers:
-      - name: maestro-server
-        image: maestroserver/server-maestro
+      - name: maestro-data
+        image: maestroserver/data-maestro
         ports: 
-        - name: mserver-port
-          containerPort: 8888
+        - name: mdata-port
+          containerPort: 5010
         env:
           - name: MAESTRO_MONGO_URI
             value: "mongodb://mongo:27017"
