@@ -17,7 +17,7 @@ spec:
           containerPort: 5000
         env:
           - name: CELERY_BROKER_URL
-            value: "amqp://rabbitmq:5672"
+            value: "amqp://internal-rabbit-svc:5672"
           - name: MAESTRO_DATA_URI
             value: "http://maestro-data-svc:5010"
         resources:

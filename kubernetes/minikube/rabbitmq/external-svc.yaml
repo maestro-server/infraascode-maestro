@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: external-rabbit-svc
+spec:
+  ports:
+  - port: 31300
+    nodePort: 31300
+    targetPort: mq-rabbitmq
+    protocol: TCP
+  selector:
+    app: rabbitmq
+  type: NodePort
