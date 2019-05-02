@@ -17,7 +17,7 @@ spec:
           containerPort: 5010
         env:
           - name: MAESTRO_MONGO_URI
-            value: "mongodb://mongo:27017"
+            value: "mongodb://internal-mongo:27017"
           - name: MAESTRO_MONGO_DATABASE
             value: "maestro-client"
         resources:

@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: maestro-server-svc
+  name: external-server
 spec:
   ports:
   - port: 31241

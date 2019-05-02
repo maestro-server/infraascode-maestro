@@ -18,6 +18,10 @@ spec:
         env:
         - name: API_URL
           value: "http://localhost:31241"
+        - name: STATIC_URL
+          value: "http://localhost:31241/static/"
+        - name: WEBSOCKET_URL
+          value: "ws://localhost:8000"
         resources:
           requests:
             cpu: 100m

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: external-mongo
+spec:
+  ports:
+  - port: 31317
+    nodePort: 31317
+    targetPort: p-mongo
+    protocol: TCP
+  selector:
+    app: mongo
+  type: NodePort

@@ -1,22 +1,22 @@
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
-metadata: 
+metadata:
+  labels:
+    app: rabbitmq
   name: rabbitmq
 spec:
   replicas: 1
-  template: 
-    metadata: 
+  template:
+    metadata:
       labels:
         app: rabbitmq
     spec:
       containers:
-      - image: rabbitmq:3-management
-        name: rabbitmq
+      - name: rabbitmq
+        image: rabbitmq:3-management
         ports:
         - name: mq-rabbitmq
           containerPort: 15672
-          hostPort: 15672
         - name: port-rabbitmq
           containerPort: 5672
-          hostPort: 5672

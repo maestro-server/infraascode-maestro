@@ -17,9 +17,11 @@ spec:
           containerPort: 5000
         env:
           - name: CELERY_BROKER_URL
-            value: "amqp://internal-rabbit-svc:5672"
+            value: "amqp://internal-rabbit:5672"
           - name: MAESTRO_DATA_URI
             value: "http://maestro-data-svc:5010"
+          - name: MAESTRO_WEBSOCKET_URI
+            value: "http://internal-websocket:8000"
         resources:
           requests:
             cpu: 100m
