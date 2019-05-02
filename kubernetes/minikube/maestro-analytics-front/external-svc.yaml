@@ -1,13 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: maestro-server-svc
+  name: external-analytics-front
 spec:
   ports:
-  - port: 31241
-    nodePort: 31241
-    targetPort: mserver-port
-    protocol: TCP
+  - port: 31299
+    nodePort: 31299
+    targetPort: afront-port
   selector:
-    app: maestro-server
+    app: maestro-analytics-front
   type: NodePort

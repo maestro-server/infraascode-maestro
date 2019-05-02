@@ -7,7 +7,6 @@ spec:
   - port: 31241
     nodePort: 31241
     targetPort: mserver-port
-    protocol: TCP
   selector:
     app: maestro-server
   type: NodePort

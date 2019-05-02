@@ -7,7 +7,6 @@ spec:
   - port: 31300
     nodePort: 31300
     targetPort: mq-rabbitmq
-    protocol: TCP
   selector:
     app: rabbitmq
   type: NodePort

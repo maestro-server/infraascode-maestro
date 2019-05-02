@@ -8,4 +8,4 @@ spec:
   ports:
     - port: 8000
   selector:
-    name: mongo
+    app: maestro-websocket

@@ -2,26 +2,30 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata: 
-  name: maestro-discovery-worker
+  name: maestro-scheduler-worker
 spec:
   replicas: 1
   template: 
     metadata: 
       labels:
-        app: maestro-discovery-worker
+        app: maestro-scheduler-worker
     spec:
       containers:
-      - name: maestro-discovery-worker
-        image: maestroserver/discovery-maestro-celery
+      - name: maestro-scheduler-worker
+        image: maestroserver/scheduler-maestro-celery
         env:
           - name: CELERY_BROKER_URL
             value: "amqp://internal-rabbit:5672"
           - name: MAESTRO_DATA_URI
             value: "http://internal-data:5010"
-          - name: MAESTRO_AUDIT_URI
-            value: "http://internal-audit:10900"
           - name: MAESTRO_WEBSOCKET_URI
             value: "http://internal-websocket:8000"
+          - name: MAESTRO_DISCOVERY_URI
+            value: "http://internal-discovery:5000"
+          - name: MAESTRO_ANALYTICS_URI
+            value: "http://internal-analytics:5020"
+          - name: MAESTRO_REPORT_URI
+            value: "http://internal-reports:5005"
         resources:
           requests:
             cpu: 100m

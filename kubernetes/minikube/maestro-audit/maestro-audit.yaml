@@ -1,25 +1,27 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata: 
-  name: maestro-server
+  name: maestro-audit
 spec:
   replicas: 1
   template: 
     metadata: 
       labels:
-        app: maestro-server
+        app: maestro-audit
     spec:
       containers:
-      - name: maestro-server
-        image: maestroserver/server-maestro
+      - name: maestro-audit
+        image: maestroserver/audit-app-maestro
         ports: 
-        - name: mserver-port
-          containerPort: 8888
+        - name: maudit-port
+          containerPort: 10900
         env:
           - name: MAESTRO_MONGO_URI
             value: "mongodb://internal-mongo:27017"
           - name: MAESTRO_MONGO_DATABASE
             value: "maestro-audit"
+          - name: MAESTRO_DATA_URI
+            value: "http://internal-data:5010"
         resources:
           requests:
             cpu: 100m
@@ -27,3 +29,5 @@ spec:
           limits:
             cpu: 300m
             memory: 0.5Gi
+
+            =http://audit:10900"

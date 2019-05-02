@@ -2,8 +2,6 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  labels:
-    app: rabbitmq
   name: rabbitmq
 spec:
   replicas: 1

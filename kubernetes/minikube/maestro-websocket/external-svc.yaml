@@ -7,7 +7,6 @@ spec:
   - port: 31800
     nodePort: 31800
     targetPort: mwebsocket-port
-    protocol: TCP
   selector:
     app: maestro-websocket
   type: NodePort

@@ -20,12 +20,28 @@ spec:
             value: "mongodb://internal-mongo:27017"
           - name: MAESTRO_MONGO_DATABASE
             value: "maestro-client"
+          - name: MAESTRO_AUDIT_URI
+            value: "http://internal-audit:10900"
+          - name: MAESTRO_REPORT_URI
+            value: "http://internal-reports:5005"
           - name: MAESTRO_DISCOVERY_URI
-            value: "http://maestro-discovery-svc:5000"
+            value: "http://internal-discovery:5000"
+          - name: MAESTRO_ANALYTICS_URI
+            value: "http://internal-analytics:5020"
+          - name: MAESTRO_ANALYTICS_FRONT_URI
+            value: "http://internal-analytics-front:9999"
+          - name: SMTP_PORT
+            value: "25"
+          - name: SMTP_HOST
+            value: "internal-maildev"
+          - name: SMTP_SENDER
+            value: "myemail@gmail.com"
+          - name: SMTP_IGNORE
+            value: "true"
         resources:
           requests:
             cpu: 100m
             memory: 0.1Gi
           limits:
             cpu: 300m
-            memory: 0.5Gi
+            memory: 0.8Gi

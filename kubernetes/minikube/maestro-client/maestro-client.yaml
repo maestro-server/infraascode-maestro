@@ -20,8 +20,10 @@ spec:
           value: "http://localhost:31241"
         - name: STATIC_URL
           value: "http://localhost:31241/static/"
+        - name: ANALYTICS_URL
+          value: "http://localhost:31299"
         - name: WEBSOCKET_URL
-          value: "ws://localhost:8000"
+          value: "ws://localhost:31800"
         resources:
           requests:
             cpu: 100m

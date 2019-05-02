@@ -1,23 +1,24 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata: 
-  name: maestro-analytics
+  name: maestro-scheduler
 spec:
   replicas: 1
   template: 
     metadata: 
       labels:
-        app: maestro-analytics
+        app: maestro-scheduler
     spec:
       containers:
-      - name: maestro-analytics
-        image: maestroserver/analytics-maestro
-        ports: 
-        - name: analytics-port
-          containerPort: 5020
+      - name: maestro-scheduler
+        image: maestroserver/scheduler-maestro
         env:
           - name: CELERY_BROKER_URL
             value: "amqp://internal-rabbit:5672"
+          - name: MAESTRO_MONGO_URI
+            value: "mongodb://internal-mongo:27017"
+          - name: MAESTRO_MONGO_DATABASE
+            value: "maestro-client"
           - name: MAESTRO_DATA_URI
             value: "http://internal-data:5010"
         resources:
@@ -25,5 +26,5 @@ spec:
             cpu: 100m
             memory: 0.1Gi
           limits:
-            cpu: 600m
-            memory: 0.5Gi
+            cpu: 300m
+            memory: 1Gi
