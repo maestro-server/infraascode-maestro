@@ -29,5 +29,3 @@ spec:
           limits:
             cpu: 300m
             memory: 0.5Gi
-
-            =http://audit:10900"
