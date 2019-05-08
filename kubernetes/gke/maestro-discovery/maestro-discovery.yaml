@@ -1,0 +1,29 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata: 
+  name: maestro-discovery
+spec:
+  replicas: 1
+  template: 
+    metadata: 
+      labels:
+        app: maestro-discovery
+    spec:
+      containers:
+      - name: maestro-discovery
+        image: maestroserver/discovery-maestro
+        ports: 
+        - name: mdiscovery-port
+          containerPort: 5000
+        env:
+          - name: CELERY_BROKER_URL
+            value: "amqp://internal-rabbit:5672"
+          - name: MAESTRO_DATA_URI
+            value: "http://internal-data:5010"
+        resources:
+          requests:
+            cpu: 100m
+            memory: 0.1Gi
+          limits:
+            cpu: 600m
+            memory: 1Gi

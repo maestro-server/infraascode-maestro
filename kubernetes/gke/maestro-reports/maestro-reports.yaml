@@ -1,0 +1,31 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata: 
+  name: maestro-reports
+spec:
+  replicas: 1
+  template: 
+    metadata: 
+      labels:
+        app: maestro-reports
+    spec:
+      containers:
+      - name: maestro-reports
+        image: maestroserver/reports-maestro
+        ports: 
+        - name: reports-port
+          containerPort: 5005
+        env:
+          - name: CELERY_BROKER_URL
+            value: "amqp://internal-rabbit:5672"
+          - name: MAESTRO_MONGO_URI
+            value: "mongodb://internal-mongo:27017"
+          - name: MAESTRO_MONGO_DATABASE
+            value: "maestro-reports"
+        resources:
+          requests:
+            cpu: 100m
+            memory: 0.1Gi
+          limits:
+            cpu: 600m
+            memory: 1Gi
