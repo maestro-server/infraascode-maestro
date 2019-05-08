@@ -1,0 +1,31 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata: 
+  name: maestro-reports-worker
+spec:
+  replicas: 1
+  template: 
+    metadata: 
+      labels:
+        app: maestro-reports-worker
+    spec:
+      containers:
+      - name: maestro-reports-worker
+        image: maestroserver/reports-maestro-celery
+        env:
+          - name: CELERY_BROKER_URL
+            value: "amqp://internal-rabbit:5672"
+          - name: MAESTRO_DATA_URI
+            value: "http://internal-data:5010"
+          - name: MAESTRO_WEBSOCKET_URI
+            value: "http://internal-websocket:8000"
+          - name: MAESTRO_REPORT_URI
+            value: "http://internal-reports:5005"
+        resources:
+          requests:
+            cpu: 100m
+            memory: 0.1Gi
+          limits:
+            cpu: 600m
+            memory: 0.9Gi

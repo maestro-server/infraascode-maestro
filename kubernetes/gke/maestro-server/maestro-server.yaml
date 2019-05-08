@@ -1,0 +1,43 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata: 
+  name: maestro-server
+spec:
+  replicas: 2
+  template: 
+    metadata: 
+      labels:
+        app: maestro-server
+    spec:
+      containers:
+      - name: maestro-server
+        image: maestroserver/server-maestro
+        ports: 
+        - name: mserver-port
+          containerPort: 8888
+        env:
+          - name: MAESTRO_MONGO_URI
+            valueFrom:
+              secretKeyRef:
+                name: mongouri
+                key: MAESTRO_MONGO_URI
+          - name: MAESTRO_MONGO_DATABASE
+            value: "maestro-client"
+          - name: MAESTRO_AUDIT_URI
+            value: "http://internal-audit:10900"
+          - name: MAESTRO_REPORT_URI
+            value: "http://internal-reports:5005"
+          - name: MAESTRO_DISCOVERY_URI
+            value: "http://internal-discovery:5000"
+          - name: MAESTRO_ANALYTICS_URI
+            value: "http://internal-analytics:5020"
+          - name: MAESTRO_ANALYTICS_FRONT_URI
+            value: "http://internal-analytics-front:9999"
+          - name: SMTP_PORT
+            value: "25"
+          - name: SMTP_HOST
+            value: "internal-maildev"
+          - name: SMTP_SENDER
+            value: "myemail@gmail.com"
+          - name: SMTP_IGNORE
+            value: "true"

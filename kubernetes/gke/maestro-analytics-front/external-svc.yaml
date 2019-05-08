@@ -1,0 +1,8 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: external-analytics-front
+spec:
+  backend:
+    serviceName: internal-analytics-front
+    servicePort: pi-afront
