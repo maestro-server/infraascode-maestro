@@ -7,5 +7,5 @@ spec:
     app: maestro-websocket
   type: LoadBalancer
   ports:
-  - port: 2053
+  - port: 8443
     targetPort: mwebsocket-port
