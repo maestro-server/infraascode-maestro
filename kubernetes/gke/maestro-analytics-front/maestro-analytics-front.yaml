@@ -17,7 +17,10 @@ spec:
           containerPort: 9999
         env:
           - name: MAESTRO_MONGO_URI
-            value: "mongodb://internal-mongo:27017"
+            valueFrom:
+              secretKeyRef:
+                name: mongouri
+                key: MAESTRO_MONGO_URI
           - name: MAESTRO_MONGO_DATABASE
             value: "maestro-client"
         resources:

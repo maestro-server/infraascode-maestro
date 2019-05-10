@@ -1,8 +1,11 @@
-apiVersion: extensions/v1beta1
-kind: Ingress
+apiVersion: v1
+kind: Service
 metadata:
-  name: maestro-websocket-svc
+  name: external-websocket
 spec:
-  backend:
-    serviceName: maestro-websocket
-    servicePort: mwebsocket-port
+  selector:
+    app: maestro-websocket
+  type: LoadBalancer
+  ports:
+  - port: 2053
+    targetPort: mwebsocket-port

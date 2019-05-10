@@ -22,10 +22,3 @@ spec:
             value: "mongodb://internal-mongo:27017"
           - name: MAESTRO_MONGO_DATABASE
             value: "maestro-reports"
-        resources:
-          requests:
-            cpu: 100m
-            memory: 0.1Gi
-          limits:
-            cpu: 600m
-            memory: 1Gi

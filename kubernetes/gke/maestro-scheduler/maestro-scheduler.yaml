@@ -24,10 +24,3 @@ spec:
             value: "maestro-client"
           - name: MAESTRO_DATA_URI
             value: "http://internal-data:5010"
-        resources:
-          requests:
-            cpu: 100m
-            memory: 0.1Gi
-          limits:
-            cpu: 300m
-            memory: 1Gi

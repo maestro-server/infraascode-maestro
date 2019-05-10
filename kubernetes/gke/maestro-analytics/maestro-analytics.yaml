@@ -20,10 +20,3 @@ spec:
             value: "amqp://internal-rabbit:5672"
           - name: MAESTRO_DATA_URI
             value: "http://internal-data:5010"
-        resources:
-          requests:
-            cpu: 100m
-            memory: 0.1Gi
-          limits:
-            cpu: 600m
-            memory: 0.5Gi

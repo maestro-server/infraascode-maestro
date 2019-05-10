@@ -24,10 +24,3 @@ spec:
           value: "http://localhost:31299"
         - name: WEBSOCKET_URL
           value: "ws://localhost:31800"
-        resources:
-          requests:
-            cpu: 100m
-            memory: 0.1Gi
-          limits:
-            cpu: 300m
-            memory: 0.3Gi

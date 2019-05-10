@@ -23,10 +23,3 @@ spec:
                 key: MAESTRO_MONGO_URI
           - name: MAESTRO_MONGO_DATABASE
             value: "maestro-client"
-        resources:
-          requests:
-            cpu: 100m
-            memory: 0.1Gi
-          limits:
-            cpu: 300m
-            memory: 0.5Gi
