@@ -21,11 +21,4 @@ spec:
           - name: MAESTRO_AUDIT_URI
             value: "http://internal-audit:10900"
           - name: MAESTRO_WEBSOCKET_URI
-            value: "http://internal-websocket:8000"
-        resources:
-          requests:
-            cpu: 100m
-            memory: 0.1Gi
-          limits:
-            cpu: 600m
-            memory: 1Gi
+            value: "https://websocket.maestroserver.io:8443"

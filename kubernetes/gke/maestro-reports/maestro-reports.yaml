@@ -16,9 +16,12 @@ spec:
         - name: reports-port
           containerPort: 5005
         env:
+          - name: MAESTRO_MONGO_URI
+            valueFrom:
+              secretKeyRef:
+                name: mongosrv
+                key: MAESTRO_MONGO_URI
           - name: CELERY_BROKER_URL
             value: "amqp://internal-rabbit:5672"
-          - name: MAESTRO_MONGO_URI
-            value: "mongodb://internal-mongo:27017"
           - name: MAESTRO_MONGO_DATABASE
             value: "maestro-reports"

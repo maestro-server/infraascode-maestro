@@ -19,13 +19,13 @@ spec:
           - name: MAESTRO_DATA_URI
             value: "http://internal-data:5010"
           - name: MAESTRO_WEBSOCKET_URI
-            value: "http://internal-websocket:8000"
+            value: "https://websocket.maestroserver.io:8443"
           - name: MAESTRO_REPORT_URI
             value: "http://internal-reports:5005"
-        resources:
-          requests:
-            cpu: 100m
-            memory: 0.1Gi
-          limits:
-            cpu: 600m
-            memory: 0.9Gi
+          - name: MAESTRO_MONGO_URI
+            valueFrom:
+              secretKeyRef:
+                name: mongosrv
+                key: MAESTRO_MONGO_URI
+          - name: MAESTRO_MONGO_DATABASE
+            value: "maestro-reports"

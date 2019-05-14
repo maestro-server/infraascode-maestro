@@ -5,6 +5,6 @@ metadata:
 spec:
   ports:
   - name: pi-afront
-    port: 9999
+    port: afront-port
   selector:
     app: maestro-analytics-front

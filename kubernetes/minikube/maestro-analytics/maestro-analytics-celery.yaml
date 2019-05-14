@@ -21,7 +21,7 @@ spec:
           - name: MAESTRO_ANALYTICS_FRONT_URI
             value: "http://internal-analytics-front:9999"
           - name: MAESTRO_WEBSOCKET_URI
-            value: "http://internal-websocket:8000"
+            value: "https://internal-websocket:8000"
         resources:
           requests:
             cpu: 100m

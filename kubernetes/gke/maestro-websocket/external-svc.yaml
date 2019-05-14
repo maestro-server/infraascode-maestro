@@ -8,4 +8,8 @@ spec:
   type: LoadBalancer
   ports:
   - port: 8443
+    name: ext-ws
     targetPort: mwebsocket-port
+  - port: 80
+    name: acme-ws
+    targetPort: acme-port

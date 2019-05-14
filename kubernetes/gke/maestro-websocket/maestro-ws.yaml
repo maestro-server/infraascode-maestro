@@ -15,3 +15,8 @@ spec:
         ports: 
         - name: mwebsocket-port
           containerPort: 8000
+        - name: acme-port
+          containerPort: 80
+        env:
+          - name: CENTRIFUGO_TLSAUTO
+            value: "true"

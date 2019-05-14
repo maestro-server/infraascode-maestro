@@ -19,7 +19,7 @@ spec:
           - name: MAESTRO_DATA_URI
             value: "http://internal-data:5010"
           - name: MAESTRO_WEBSOCKET_URI
-            value: "http://internal-websocket:8000"
+            value: "https://internal-websocket:8000"
           - name: MAESTRO_DISCOVERY_URI
             value: "http://internal-discovery:5000"
           - name: MAESTRO_ANALYTICS_URI
