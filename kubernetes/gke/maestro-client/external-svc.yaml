@@ -1,8 +1,11 @@
-apiVersion: extensions/v1beta1
-kind: Ingress
+apiVersion: v1
+kind: Service
 metadata:
   name: external-client
 spec:
-  backend:
-    serviceName: internal-client
-    servicePort: pi-client
+  selector:
+    app: maestro-client
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: mclient-port

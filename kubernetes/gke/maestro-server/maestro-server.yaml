@@ -34,10 +34,51 @@ spec:
           - name: MAESTRO_ANALYTICS_FRONT_URI
             value: "http://internal-analytics-front:9999"
           - name: SMTP_PORT
-            value: "25"
+            valueFrom:
+              secretKeyRef:
+                name: smtp
+                key: SMTP_PORT
           - name: SMTP_HOST
-            value: "internal-maildev"
+            valueFrom:
+              secretKeyRef:
+                name: smtp
+                key: SMTP_HOST
           - name: SMTP_SENDER
-            value: "myemail@gmail.com"
-          - name: SMTP_IGNORE
+            valueFrom:
+              secretKeyRef:
+                name: smtp
+                key: SMTP_SENDER
+          - name: SMTP_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: smtp
+                key: SMTP_USERNAME
+          - name: SMTP_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: smtp
+                key: SMTP_PASSWORD
+          - name: SMTP_USETSL
             value: "true"
+          - name: MAESTRO_UPLOAD_TYPE
+            value: "S3"
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                name: storage
+                key: AWS_ACCESS_KEY_ID
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: storage
+                key: AWS_SECRET_ACCESS_KEY
+          - name: AWS_S3_BUCKET_NAME
+            valueFrom:
+              secretKeyRef:
+                name: storage
+                key: AWS_S3_BUCKET_NAME
+          - name: AWS_DEFAULT_REGION
+            valueFrom:
+              secretKeyRef:
+                name: storage
+                key: AWS_DEFAULT_REGION

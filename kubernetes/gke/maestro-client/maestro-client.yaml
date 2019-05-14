@@ -17,10 +17,10 @@ spec:
           containerPort: 80
         env:
         - name: API_URL
-          value: "http://localhost:31241"
+          value: "//api.maestroserver.io"
         - name: STATIC_URL
-          value: "http://localhost:31241/static/"
+          value: "https://s3.amazonaws.com/awsmaestro/"
         - name: ANALYTICS_URL
-          value: "http://localhost:31299"
+          value: "//graphs.maestroserver.io"
         - name: WEBSOCKET_URL
-          value: "ws://localhost:31800"
+          value: "wss://webscoket.maestroserver.io:8443"
