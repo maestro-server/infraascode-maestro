@@ -15,6 +15,22 @@ spec:
         ports: 
         - name: mdiscovery-port
           containerPort: 5000
+
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 5000
+          initialDelaySeconds: 5
+          timeoutSeconds: 1
+          periodSeconds: 15
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 5000
+          initialDelaySeconds: 15
+          timeoutSeconds: 1
+          periodSeconds: 15
+
         env:
           - name: CELERY_BROKER_URL
             value: "amqp://internal-rabbit:5672"

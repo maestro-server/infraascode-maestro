@@ -1,0 +1,63 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata: 
+  name: maestro-analytics-front
+spec:
+  replicas: 1
+  template: 
+    metadata: 
+      labels:
+        app: maestro-analytics-front
+    spec:
+      containers:
+      - name: maestro-analytics-front
+        image: maestroserver/analytics-front-maestro
+        ports: 
+        - name: afront-port
+          containerPort: 9999
+
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 9999
+          initialDelaySeconds: 5
+          timeoutSeconds: 1
+          periodSeconds: 15
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 9999
+          initialDelaySeconds: 15
+          timeoutSeconds: 1
+          periodSeconds: 15
+
+        env:
+          - name: MAESTRO_MONGO_URI
+            valueFrom:
+              secretKeyRef:
+                name: mongouri
+                key: MAESTRO_MONGO_URI
+          - name: MAESTRO_MONGO_DATABASE
+            value: "maestro-client"
+          - name: MAESTRO_UPLOAD_TYPE
+            value: "S3"
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                name: storage
+                key: AWS_ACCESS_KEY_ID
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: storage
+                key: AWS_SECRET_ACCESS_KEY
+          - name: AWS_S3_BUCKET_NAME
+            valueFrom:
+              secretKeyRef:
+                name: storage
+                key: AWS_S3_BUCKET_NAME
+          - name: AWS_DEFAULT_REGION
+            valueFrom:
+              secretKeyRef:
+                name: storage
+                key: AWS_DEFAULT_REGION

@@ -15,6 +15,22 @@ spec:
         ports: 
         - name: mserver-port
           containerPort: 8888
+
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8888
+          initialDelaySeconds: 3
+          timeoutSeconds: 1
+          periodSeconds: 15
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8888
+          initialDelaySeconds: 15
+          timeoutSeconds: 1
+          periodSeconds: 15
+
         env:
           - name: MAESTRO_MONGO_URI
             valueFrom:

@@ -15,6 +15,22 @@ spec:
         ports: 
         - name: maudit-port
           containerPort: 10900
+
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 10900
+          initialDelaySeconds: 5
+          timeoutSeconds: 1
+          periodSeconds: 15
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 10900
+          initialDelaySeconds: 15
+          timeoutSeconds: 1
+          periodSeconds: 15
+
         env:
           - name: MAESTRO_MONGO_URI
             valueFrom:

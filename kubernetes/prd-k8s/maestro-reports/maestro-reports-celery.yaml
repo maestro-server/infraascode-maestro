@@ -13,6 +13,17 @@ spec:
       containers:
       - name: maestro-reports-worker
         image: maestroserver/reports-maestro-celery
+
+        livenessProbe:
+          exec:
+            command:
+            - "/bin/sh"
+            - "-c"
+            - "celery -A app.celery status | grep -o ': OK'"
+          initialDelaySeconds: 30
+          timeoutSeconds: 1
+          periodSeconds: 15
+
         env:
           - name: CELERY_BROKER_URL
             value: "amqp://internal-rabbit:5672"

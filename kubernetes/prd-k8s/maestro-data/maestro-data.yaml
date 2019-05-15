@@ -15,6 +15,22 @@ spec:
         ports: 
         - name: mdata-port
           containerPort: 5010
+
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 5010
+          initialDelaySeconds: 5
+          timeoutSeconds: 1
+          periodSeconds: 15
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 5010
+          initialDelaySeconds: 15
+          timeoutSeconds: 1
+          periodSeconds: 15
+
         env:
           - name: MAESTRO_MONGO_URI
             valueFrom:
