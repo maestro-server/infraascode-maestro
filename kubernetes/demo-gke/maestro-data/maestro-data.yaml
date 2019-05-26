@@ -1,0 +1,41 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata: 
+  name: maestro-data
+spec:
+  replicas: 1
+  template: 
+    metadata: 
+      labels:
+        app: maestro-data
+    spec:
+      containers:
+      - name: maestro-data
+        image: maestroserver/data-maestro
+        ports: 
+        - name: mdata-port
+          containerPort: 5010
+
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 5010
+          initialDelaySeconds: 5
+          timeoutSeconds: 1
+          periodSeconds: 15
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 5010
+          initialDelaySeconds: 15
+          timeoutSeconds: 1
+          periodSeconds: 15
+
+        env:
+          - name: MAESTRO_MONGO_URI
+            valueFrom:
+              secretKeyRef:
+                name: mongosrv
+                key: MAESTRO_MONGO_URI
+          - name: MAESTRO_MONGO_DATABASE
+            value: "maestro-client"

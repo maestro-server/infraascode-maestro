@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: internal-discovery
+spec:
+  ports:
+  - name: p-discovery
+    port: 5000
+  selector:
+    app: maestro-discovery

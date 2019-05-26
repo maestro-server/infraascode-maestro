@@ -1,0 +1,42 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata: 
+  name: maestro-client
+spec:
+  replicas: 2
+  template: 
+    metadata: 
+      labels:
+        app: maestro-client
+    spec:
+      containers:
+      - name: maestro-client
+        image: maestroserver/client-maestro
+        ports: 
+        - name: mclient-port
+          containerPort: 80
+
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 3
+          timeoutSeconds: 1
+          periodSeconds: 15
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 15
+          timeoutSeconds: 1
+          periodSeconds: 15
+
+        env:
+        - name: API_URL
+          value: "//api.maestroserver.io"
+        - name: STATIC_URL
+          value: "https://s3.amazonaws.com/awsmaestro/"
+        - name: ANALYTICS_URL
+          value: "//graphs.maestroserver.io"
+        - name: WEBSOCKET_URL
+          value: "wss://webscoket.maestroserver.io:8443"

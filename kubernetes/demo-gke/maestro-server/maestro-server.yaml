@@ -1,0 +1,104 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata: 
+  name: maestro-server
+spec:
+  replicas: 1
+  template: 
+    metadata: 
+      labels:
+        app: maestro-server
+    spec:
+      containers:
+      - name: maestro-server
+        image: maestroserver/server-maestro
+        ports: 
+        - name: mserver-port
+          containerPort: 8888
+
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8888
+          initialDelaySeconds: 3
+          timeoutSeconds: 1
+          periodSeconds: 15
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8888
+          initialDelaySeconds: 15
+          timeoutSeconds: 1
+          periodSeconds: 15
+
+        resources:
+          requests:
+            cpu: "10m"
+
+        env:
+          - name: MAESTRO_MONGO_URI
+            valueFrom:
+              secretKeyRef:
+                name: mongouri
+                key: MAESTRO_MONGO_URI
+          - name: MAESTRO_MONGO_DATABASE
+            value: "maestro-client"
+          - name: MAESTRO_AUDIT_URI
+            value: "http://internal-audit:10900"
+          - name: MAESTRO_REPORT_URI
+            value: "http://internal-reports:5005"
+          - name: MAESTRO_DISCOVERY_URI
+            value: "http://internal-discovery:5000"
+          - name: MAESTRO_ANALYTICS_URI
+            value: "http://internal-analytics:5020"
+          - name: MAESTRO_ANALYTICS_FRONT_URI
+            value: "http://internal-analytics-front:9999"
+          - name: SMTP_PORT
+            valueFrom:
+              secretKeyRef:
+                name: smtp
+                key: SMTP_PORT
+          - name: SMTP_HOST
+            valueFrom:
+              secretKeyRef:
+                name: smtp
+                key: SMTP_HOST
+          - name: SMTP_SENDER
+            valueFrom:
+              secretKeyRef:
+                name: smtp
+                key: SMTP_SENDER
+          - name: SMTP_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: smtp
+                key: SMTP_USERNAME
+          - name: SMTP_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: smtp
+                key: SMTP_PASSWORD
+          - name: SMTP_USETSL
+            value: "true"
+          - name: MAESTRO_UPLOAD_TYPE
+            value: "S3"
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                name: storage
+                key: AWS_ACCESS_KEY_ID
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: storage
+                key: AWS_SECRET_ACCESS_KEY
+          - name: AWS_S3_BUCKET_NAME
+            valueFrom:
+              secretKeyRef:
+                name: storage
+                key: AWS_S3_BUCKET_NAME
+          - name: AWS_DEFAULT_REGION
+            valueFrom:
+              secretKeyRef:
+                name: storage
+                key: AWS_DEFAULT_REGION

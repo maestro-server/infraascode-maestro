@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: external-client
+spec:
+  selector:
+    app: maestro-client
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: mclient-port

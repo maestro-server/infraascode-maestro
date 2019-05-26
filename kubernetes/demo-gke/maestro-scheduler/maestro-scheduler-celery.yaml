@@ -1,0 +1,42 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata: 
+  name: maestro-scheduler-worker
+spec:
+  replicas: 1
+  template: 
+    metadata: 
+      labels:
+        app: maestro-scheduler-worker
+    spec:
+      containers:
+      - name: maestro-scheduler-worker
+        image: maestroserver/scheduler-maestro-celery
+
+        livenessProbe:
+          exec:
+            command:
+            - "/bin/sh"
+            - "-c"
+            - "celery -A app.celery status | grep -o ': OK'"
+          initialDelaySeconds: 30
+          timeoutSeconds: 1
+          periodSeconds: 15
+
+        env:
+          - name: CELERY_BROKER_URL
+            value: "amqp://internal-rabbit:5672"
+          - name: MAESTRO_DATA_URI
+            value: "http://internal-data:5010"
+          - name: MAESTRO_WEBSOCKET_URI
+            value: "https://websocket.maestroserver.io:8443"
+          - name: MAESTRO_DISCOVERY_URI
+            value: "http://internal-discovery:5000"
+          - name: MAESTRO_ANALYTICS_URI
+            value: "http://internal-analytics:5020"
+          - name: MAESTRO_REPORT_URI
+            value: "http://internal-reports:5005"
+        resources:
+          requests:
+            cpu: 10m

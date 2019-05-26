@@ -1,0 +1,47 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata: 
+  name: maestro-audit
+spec:
+  replicas: 1
+  template: 
+    metadata: 
+      labels:
+        app: maestro-audit
+    spec:
+      containers:
+      - name: maestro-audit
+        image: maestroserver/audit-app-maestro
+        ports: 
+        - name: maudit-port
+          containerPort: 10900
+
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 10900
+          initialDelaySeconds: 5
+          timeoutSeconds: 1
+          periodSeconds: 15
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 10900
+          initialDelaySeconds: 15
+          timeoutSeconds: 1
+          periodSeconds: 15
+
+        resources:
+          requests:
+            cpu: "10m"
+            
+        env:
+          - name: MAESTRO_MONGO_URI
+            valueFrom:
+              secretKeyRef:
+                name: mongouri
+                key: MAESTRO_MONGO_URI
+          - name: MAESTRO_MONGO_DATABASE
+            value: "maestro-audit"
+          - name: MAESTRO_DATA_URI
+            value: "http://internal-data:5010"

@@ -1,0 +1,47 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata: 
+  name: maestro-reports
+spec:
+  replicas: 1
+  template: 
+    metadata: 
+      labels:
+        app: maestro-reports
+    spec:
+      containers:
+      - name: maestro-reports
+        image: maestroserver/reports-maestro
+        ports: 
+        - name: reports-port
+          containerPort: 5005
+
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 5005
+          initialDelaySeconds: 5
+          timeoutSeconds: 1
+          periodSeconds: 15
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 5005
+          initialDelaySeconds: 15
+          timeoutSeconds: 1
+          periodSeconds: 15
+
+        resources:
+          requests:
+            cpu: "10m"
+
+        env:
+          - name: MAESTRO_MONGO_URI
+            valueFrom:
+              secretKeyRef:
+                name: mongosrv
+                key: MAESTRO_MONGO_URI
+          - name: CELERY_BROKER_URL
+            value: "amqp://internal-rabbit:5672"
+          - name: MAESTRO_MONGO_DATABASE
+            value: "maestro-reports"

@@ -1,0 +1,27 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata: 
+  name: maestro-websocket
+spec:
+  replicas: 1
+  template: 
+    metadata: 
+      labels:
+        app: maestro-websocket
+    spec:
+      containers:
+      - name: maestro-websocket
+        image: maestroserver/websocket-maestro
+        ports: 
+        - name: mwebsocket-port
+          containerPort: 8000
+        - name: acme-port
+          containerPort: 80
+
+        resources:
+          requests:
+            cpu: "10m"
+
+        env:
+          - name: CENTRIFUGO_TLSAUTO
+            value: "true"

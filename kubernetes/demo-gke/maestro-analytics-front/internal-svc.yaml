@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: internal-analytics-front
+spec:
+  ports:
+  - name: pi-afront
+    port: afront-port
+  selector:
+    app: maestro-analytics-front
