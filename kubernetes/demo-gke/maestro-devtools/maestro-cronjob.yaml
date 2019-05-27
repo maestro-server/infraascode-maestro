@@ -1,0 +1,41 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: populate-demo
+spec:
+  schedule: "0 3 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: populate-demo
+            image: maestroserver/populate-demo
+
+            resources:
+              requests:
+                cpu: "10m"
+
+            env:
+              - name: HTTP_ENDPOINT
+                value: "https://api.maestroserver.io"
+              - name: MAESTRO_MONGO_URI
+                valueFrom:
+                  secretKeyRef:
+                    name: mongouri
+                    key: MAESTRO_MONGO_URI
+              - name: MAESTRO_MONGO_DATABASE
+                value: "maestro-client"
+              - name: MAESTRO_MONGO_DATABASE
+                value: "maestro-client"
+              - name: MAESTRO_AUDIT_URI
+                value: "http://internal-audit:10900"
+              - name: MAESTRO_REPORT_URI
+                value: "http://internal-reports:5005"
+              - name: MAESTRO_DISCOVERY_URI
+                value: "http://internal-discovery:5000"
+              - name: MAESTRO_ANALYTICS_URI
+                value: "http://internal-analytics:5020"
+              - name: MAESTRO_ANALYTICS_FRONT_URI
+                value: "http://internal-analytics-front:9999"
