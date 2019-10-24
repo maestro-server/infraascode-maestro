@@ -56,8 +56,7 @@ We can use a simple docker to run mongodb, but we advise to use stateful set ser
 Rabbitmq it's used only in an async task without any critical point out, a simple container with good liveness can be enough. 
 
 After maestro use 4 secrets group, 
-**mongo_srv**: It's a mongo srv string [mongo+srv://]
-**mongo_uri**: It's old mongo url [mongo://]
+**mongo_srv**: It's a mongo srv string [mongo+srv://] or **mongo_uri**: It's old mongo url [mongo://]
 **smtp**: Smtp credencials used on forgot password feature
 **storage**: Bucket credencials to storage the avatar images, you can use a local or a s3 storage type.
 

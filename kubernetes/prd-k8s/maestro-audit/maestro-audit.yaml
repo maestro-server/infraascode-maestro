@@ -35,7 +35,7 @@ spec:
           - name: MAESTRO_MONGO_URI
             valueFrom:
               secretKeyRef:
-                name: mongouri
+                name: mongosrv
                 key: MAESTRO_MONGO_URI
           - name: MAESTRO_MONGO_DATABASE
             value: "maestro-audit"
