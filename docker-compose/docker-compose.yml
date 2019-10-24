@@ -18,7 +18,7 @@ services:
         ports:
         - "8888:8888"
         environment:
-        - "MAESTRO_MONGO_URI=mongodb"
+        - "MAESTRO_MONGO_URI=mongodb://mongodb"
         - "MAESTRO_MONGO_DATABASE=maestro-client"
         - "MAESTRO_DISCOVERY_URI=http://discovery:5000"
         - "MAESTRO_REPORT_URI=http://reports:5005"
@@ -59,7 +59,7 @@ services:
         image: maestroserver/reports-maestro
         environment:
         - "CELERY_BROKER_URL=amqp://rabbitmq:5672"
-        - "MAESTRO_MONGO_URI=mongodb"
+        - "MAESTRO_MONGO_URI=mongodb://mongodb"
         - "MAESTRO_MONGO_DATABASE=maestro-reports"
         depends_on:
         - rabbitmq
@@ -82,7 +82,7 @@ services:
         environment:
         - "MAESTRO_DATA_URI=http://data:5010"
         - "CELERY_BROKER_URL=amqp://rabbitmq:5672"
-        - "MAESTRO_MONGO_URI=mongodb"
+        - "MAESTRO_MONGO_URI=mongodb://mongodb"
         - "MAESTRO_MONGO_DATABASE=maestro-client"
         depends_on:
         - mongodb
@@ -128,13 +128,13 @@ services:
         ports:
         - "9999:9999"
         environment:
-        - "MAESTRO_MONGO_URI=mongodb"
+        - "MAESTRO_MONGO_URI=mongodb://mongodb"
         - "MAESTRO_MONGO_DATABASE=maestro-client"
 
     data:
         image: maestroserver/data-maestro
         environment:
-        - "MAESTRO_MONGO_URI=mongodb"
+        - "MAESTRO_MONGO_URI=mongodb://mongodb"
         - "MAESTRO_MONGO_DATABASE=maestro-client"
         depends_on:
         - mongodb
@@ -142,7 +142,7 @@ services:
     audit:
         image: maestroserver/audit-app-maestro
         environment:
-        - "MAESTRO_MONGO_URI=mongodb"
+        - "MAESTRO_MONGO_URI=mongodb://mongodb"
         - "MAESTRO_MONGO_DATABASE=maestro-audit"
         - "MAESTRO_DATA_URI=http://data:5010"
         depends_on:
