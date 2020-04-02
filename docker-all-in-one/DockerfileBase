@@ -2,37 +2,21 @@ FROM ubuntu:18.04
 
 RUN apt-get -y update && \
 	apt-get -y install \ 
-	wget \
 	curl \
 	gnupg \
 	python3.6 \ 
 	python3-pip \ 
-    nginx \
-	rabbitmq-server \
+	python3-venv \
 	build-essential \
 	openssl \
 	libcurl4-openssl-dev \
 	libssl-dev \
-	supervisor \
 	pkg-config \
 	graphviz-dev \
-	mongodb-server
-
-RUN mkdir -p /var/log/supervisor
+	&& rm -rf /var/lib/apt/lists/*
 
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - && \
 	apt-get -y update && \
 	apt-get install -y nodejs
-
-# Forward request logs to Docker log collector
-RUN ln -sf /dev/stdout /var/log/nginx/access.log \
-  && ln -sf /dev/stderr /var/log/nginx/error.log
-
-RUN rm -f /etc/nginx/fastcgi.conf /etc/nginx/fastcgi_params && \
-    rm -f /etc/nginx/snippets/fastcgi-php.conf /etc/nginx/snippets/snakeoil.conf
-
-RUN apt-get -y update && \
-	apt-get -y install \ 
-	mongodb
 
 RUN pip3 install --upgrade pip

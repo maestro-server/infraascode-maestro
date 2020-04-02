@@ -1,122 +1,99 @@
-FROM demo-maestro-base
+# =================================== Multi Stage - Compiler Python
+FROM maestroserver/standalone-maestro-base AS compiler-python
+
+ENV PYTHONDONTWRITEBYTECODE=1
+RUN python3 -m venv /home/app/venv
+ENV PATH="/home/app/venv/bin:$PATH"
+
+COPY discovery-api/requirements.txt /data/discovery-app/requirements.txt
+COPY report-app/requirements.txt /data/report-app/requirements.txt
+COPY data-app/requirements.txt /data/data-app/requirements.txt
+COPY analytics-maestro/requirements.txt /data/analytics-maestro/requirements.txt
+COPY scheduler-app/requirements.txt /data/scheduler-app/requirements.txt
+
+RUN pip3 install -r /data/discovery-app/requirements.txt # Discovery App
+RUN pip3 install -r /data/report-app/requirements.txt # Report App
+RUN pip3 install -r /data/data-app/requirements.txt # Data App
+RUN pip3 install -r /data/analytics-maestro/requirements.txt # Analytics App
+RUN pip3 install -r /data/scheduler-app/requirements.txt # Schedule App
+RUN pip3 install gunicorn
+
+RUN pip3 uninstall -y pyjwt && pip3 install pyjwt # Bug on jwt encode call
+
+# =================================== Multi Stage - Compiler Nodejs
+FROM maestroserver/standalone-maestro-base AS compiler-nodejs
+# Server App
+WORKDIR /data/server-app/
+COPY server-app/ ./
+RUN npm install --only=production
+RUN mkdir -p /data/server-app/public/static/users/ && mkdir -p /data/public/static/teams/
+
+# Audit App
+WORKDIR /data/audit-app/
+COPY audit-app/ ./
+RUN npm install --only=production
+
+# Analytics Front
+WORKDIR /data/analytics-front/
+COPY analytics-front/ ./
+RUN npm install --only=production
+
+RUN mkdir -p /data/artifacts
+RUN mkdir -p /data/analytics-front/public
+RUN mkdir -p /data/artifacts/graphs-bussiness
+
+RUN npm --prefix /data/server-app/ install bcrypt
+
+
+
+# =================================== Multi Stage - standalone
+FROM maestroserver/standalone-maestro-services AS standalone 
+COPY --from=compiler-python /home/app/venv /home/app/venv
+COPY --from=compiler-nodejs /data /data
+
+RUN useradd app
 
 # Client App
 RUN useradd -s /bin/false nginx
-
 COPY client-app/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY client-app/dist /var/www
 COPY client-app/static /var/www/static
 
-# Server App
-WORKDIR /data/server-app/
-
-COPY server-app/app/ ./app/
-COPY server-app/templates ./templates/
-COPY server-app/migrations ./migrations/
-COPY server-app/.migration-config.js .
-COPY server-app/package.json .
-COPY server-app/server.js .
-
-RUN mkdir -p /data/server-app/public/static/users/ && mkdir -p /data/public/static/teams/
-
-RUN npm install --only=production
 
 # Discovery App
-WORKDIR /data/discovery-app/
-
-COPY discovery-api/app ./app/
-COPY discovery-api/instance ./instance/
-COPY discovery-api/requirements.txt .
-COPY discovery-api/package.json .
-COPY discovery-api/run.py .
-COPY discovery-api/gunicorn_config.py .
-
-RUN pip3 install -r requirements.txt
+COPY discovery-api/ /data/discovery-app/
 
 # Report App
-WORKDIR /data/report-app/
-
-COPY report-app/app ./app/
-COPY report-app/instance ./instance/
-COPY report-app/requirements.txt .
-COPY report-app/package.json .
-COPY report-app/run.py .
-COPY report-app/gunicorn_config.py .
-
-RUN pip3 install -r requirements.txt
+COPY report-app/ /data/report-app/
 
 # Data App
-WORKDIR /data/data-app/
-
-COPY data-app/app ./app/
-COPY data-app/instance ./instance/
-COPY data-app/requirements.txt .
-COPY data-app/package.json .
-COPY data-app/run.py .
-COPY data-app/gunicorn_config.py .
-
-RUN pip3 install -r requirements.txt
+COPY data-app/ /data/data-app/
 
 # Analytics App
-WORKDIR /data/analytics-maestro/
-
-COPY analytics-maestro/app ./app/
-COPY analytics-maestro/instance ./instance/
-COPY analytics-maestro/requirements.txt .
-COPY analytics-maestro/package.json .
-COPY analytics-maestro/run.py .
-COPY analytics-maestro/gunicorn_config.py .
-
-RUN pip3 install -r requirements.txt
-
-# Analytics Front
-WORKDIR /data/analytics-front/
-
-COPY analytics-front/app/ ./app/
-COPY analytics-front/package.json .
-COPY analytics-front/server.js .
-
-RUN mkdir -p /data/analytics-front/artifacts/graphs-bussiness
-RUN mkdir -p /data/analytics-front/public
-
-RUN npm install --only=production
+COPY analytics-maestro/ /data/analytics-maestro/
 
 # Schedule App
-WORKDIR /data/scheduler-app/
-
-COPY scheduler-app/app ./app/
-COPY scheduler-app/instance ./instance/
-COPY scheduler-app/requirements.txt .
-COPY scheduler-app/package.json .
-COPY scheduler-app/run.py .
-
-RUN pip3 install -r requirements.txt
+COPY scheduler-app/ /data/scheduler-app/
+RUN touch /data/scheduler-app/app.schedulers.MongoScheduler.db
+RUN chown app:app /data/scheduler-app/app.schedulers.MongoScheduler.db
 
 # Centrifugo
+COPY websocket-app/devtools/centrifugo /usr/local/bin/centrifugo 
+COPY websocket-app/devtools/pems/server.key /tmp/certs/server.key
+COPY websocket-app/devtools/pems/server.crt /tmp/certs/server.crt
 
-# Audit App
-WORKDIR /data/audit-app/
-
-COPY audit-app/app/ ./app/
-COPY audit-app/package.json .
-COPY audit-app/server.js .
-
-RUN npm install --only=production
-
-
-RUN pip3 uninstall --yes pyjwt
-RUN yes | pip3 install pyjwt
 
 # Entry point
-RUN useradd app
+RUN chown -R app:app /data/artifacts
+ENV PATH="/home/app/venv/bin:$PATH"
+RUN mkdir -p /data/db
 WORKDIR /data/
 
-RUN pip3 install gunicorn
-
-COPY docker-entrypoint.sh .
+COPY infraascode-maestro/docker-all-in-one/docker-entrypoint.sh .
+COPY infraascode-maestro/docker-all-in-one/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 RUN chmod +x /data/docker-entrypoint.sh
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-EXPOSE 80 443 8888
+
+EXPOSE 80 443 8888 8000 9999
 
 CMD ["/data/docker-entrypoint.sh"]
