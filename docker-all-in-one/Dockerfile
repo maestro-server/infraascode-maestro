@@ -26,7 +26,7 @@ FROM maestroserver/standalone-maestro-base AS compiler-nodejs
 WORKDIR /data/server-app/
 COPY server-app/ ./
 RUN npm install --only=production
-RUN mkdir -p /data/server-app/public/static/users/ && mkdir -p /data/public/static/teams/
+RUN mkdir -p /data/server-app/public/static/users/ && mkdir -p /data/server-app/public/static/teams/
 
 # Audit App
 WORKDIR /data/audit-app/
@@ -84,7 +84,7 @@ COPY websocket-app/devtools/pems/server.crt /tmp/certs/server.crt
 
 
 # Entry point
-RUN chown -R app:app /data/artifacts
+RUN chown -R app:app /data/
 ENV PATH="/home/app/venv/bin:$PATH"
 RUN mkdir -p /data/db
 WORKDIR /data/
