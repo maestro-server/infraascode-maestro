@@ -12,7 +12,6 @@ before_install:
   - git clone https://github.com/maestro-server/analytics-front.git analytics-front/
   - git clone https://github.com/maestro-server/analytics-maestro.git analytics-maestro/
   - git clone https://github.com/maestro-server/audit-app.git audit-app/
-  - git clone https://github.com/maestro-server/audit-app.git audit-app/
   - git clone https://github.com/maestro-server/websocket-app.git websocket-app/
 
 install:
