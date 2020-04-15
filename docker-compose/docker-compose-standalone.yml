@@ -1,0 +1,45 @@
+---
+version: '3'
+
+services:
+    maestro:
+        image: maestroserver/standalone-maestro
+        ports:
+        - 80:80
+        - 8888:8888
+        - 8000:8000
+        - 9999:9999
+        environment:
+        - MAESTRO_MONGO_URI=mongodb://mongodb:27017
+        - SMTP_PORT=465
+        - "SMTP_PORT=25"
+        - "SMTP_HOST=maildev"
+        - "SMTP_SENDER=maestro@mysender.com"
+        - "SMTP_IGNORE=true"
+        volumes:
+        - artifacts_server:/data/server-app/public/
+        - artifacts_analytics:/data/artifacts
+    
+    rabbitmq:
+        image: rabbitmq:3-management
+        ports:
+        - "15672:15672"
+        - "5672:5672"
+        
+    mongodb:
+        image: mongo
+        volumes:
+        - mongodata:/data/db
+        ports:
+        - "27018:27017"
+
+    maildev:
+        image: djfarrelly/maildev
+        ports:
+        - "1025:25"
+        - "1080:80"
+
+volumes:
+    mongodata: {}
+    artifacts_server: {}
+    artifacts_analytics: {}

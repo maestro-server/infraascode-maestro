@@ -1,6 +1,12 @@
-language: minimal
+language: node_js
+node_js:
+  - '8'
+
 before_install:
-  - git clone https://github.com/maestro-server/client-app.git client-app
+  - sudo apt-get install git
+
+install:
+  - git clone https://github.com/maestro-server/client-app.git client-app/
   - git clone https://github.com/maestro-server/server-app.git server-app/
   - git clone https://github.com/maestro-server/discovery-api.git discovery-api/
   - git clone https://github.com/maestro-server/report-app.git report-app/
@@ -13,9 +19,16 @@ before_install:
 
 jobs:
   include:
+    - stage: build client dist
+      script:
+        - npm run build --prefix client-app/
+
     - stage: standalone maestro
       install:
         - cp docker-all-in-one/Dockerfile ./Dockerfile
       script:
-        - docker build -f Dockerfile -t standalone-maestro-base .
+        - docker build -f Dockerfile -t standalone-maestro .
+      after_success:
+        - docker login -u $DOCKER_USER -p $DOCKER_PASS
+        - docker tag standalone-maestro $DOCKER_USER/standalone-maestro:latest
 

@@ -154,7 +154,6 @@ services:
         - "8000:8000"
 
     rabbitmq:
-        hostname: "discovery-rabbit"
         image: rabbitmq:3-management
         ports:
         - "15672:15672"
