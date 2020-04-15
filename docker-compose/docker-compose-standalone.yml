@@ -17,8 +17,8 @@ services:
         - "SMTP_SENDER=maestro@mysender.com"
         - "SMTP_IGNORE=true"
         volumes:
-        - artifacts_server:/data/server-app/public/
-        - artifacts_analytics:/data/artifacts
+        - "artifactss:/data/server-app/"
+        - "artifactsa:/data/artifacts"
     
     rabbitmq:
         image: rabbitmq:3-management
@@ -29,7 +29,7 @@ services:
     mongodb:
         image: mongo
         volumes:
-        - mongodata:/data/db
+        - mongodsrv:/data/db
         ports:
         - "27018:27017"
 
@@ -40,6 +40,6 @@ services:
         - "1080:80"
 
 volumes:
-    mongodata: {}
-    artifacts_server: {}
-    artifacts_analytics: {}
+    mongodsrv: {}
+    artifactss: {}
+    artifactsa: {}
