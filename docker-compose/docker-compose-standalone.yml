@@ -17,7 +17,6 @@ services:
         - "SMTP_SENDER=maestro@mysender.com"
         - "SMTP_IGNORE=true"
         volumes:
-        - "artifactss:/data/server-app/"
         - "artifactsa:/data/artifacts"
     
     rabbitmq:
@@ -41,5 +40,4 @@ services:
 
 volumes:
     mongodsrv: {}
-    artifactss: {}
     artifactsa: {}
