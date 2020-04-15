@@ -15,7 +15,7 @@ jobs:
   include:
     - stage: standalone maestro
       install:
-        - copy docker-all-in-one/Dockerfile ./Dockerfile
+        - cp docker-all-in-one/Dockerfile ./Dockerfile
       script:
         - docker build -f Dockerfile -t standalone-maestro-base .
 
