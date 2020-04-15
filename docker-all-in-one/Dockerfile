@@ -5,11 +5,12 @@ ENV PYTHONDONTWRITEBYTECODE=1
 RUN python3 -m venv /home/app/venv
 ENV PATH="/home/app/venv/bin:$PATH"
 
-COPY discovery-api/requirements.txt /data/discovery-app/requirements.txt
-COPY report-app/requirements.txt /data/report-app/requirements.txt
-COPY data-app/requirements.txt /data/data-app/requirements.txt
-COPY analytics-maestro/requirements.txt /data/analytics-maestro/requirements.txt
-COPY scheduler-app/requirements.txt /data/scheduler-app/requirements.txt
+COPY discovery-api/ /data/discovery-app/
+COPY report-app/ /data/report-app/
+COPY data-app/ /data/data-app/
+COPY analytics-maestro/ /data/analytics-maestro/
+COPY scheduler-app/ /data/scheduler-app/
+RUN touch /data/scheduler-app/app.schedulers.MongoScheduler.db
 
 RUN pip3 install -r /data/discovery-app/requirements.txt # Discovery App
 RUN pip3 install -r /data/report-app/requirements.txt # Report App
@@ -49,6 +50,7 @@ RUN npm --prefix /data/server-app/ install bcrypt
 # =================================== Multi Stage - standalone
 FROM maestroserver/standalone-maestro-services AS standalone 
 COPY --from=compiler-python /home/app/venv /home/app/venv
+COPY --from=compiler-python /data /data
 COPY --from=compiler-nodejs /data /data
 
 RUN useradd app
@@ -59,29 +61,10 @@ COPY client-app/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY client-app/dist /var/www
 COPY client-app/static /var/www/static
 
-
-# Discovery App
-COPY discovery-api/ /data/discovery-app/
-
-# Report App
-COPY report-app/ /data/report-app/
-
-# Data App
-COPY data-app/ /data/data-app/
-
-# Analytics App
-COPY analytics-maestro/ /data/analytics-maestro/
-
-# Schedule App
-COPY scheduler-app/ /data/scheduler-app/
-RUN touch /data/scheduler-app/app.schedulers.MongoScheduler.db
-RUN chown app:app /data/scheduler-app/app.schedulers.MongoScheduler.db
-
 # Centrifugo
 COPY websocket-app/devtools/centrifugo /usr/local/bin/centrifugo 
 COPY websocket-app/devtools/pems/server.key /tmp/certs/server.key
 COPY websocket-app/devtools/pems/server.crt /tmp/certs/server.crt
-
 
 # Entry point
 RUN chown -R app:app /data/
@@ -92,7 +75,6 @@ WORKDIR /data/
 COPY infraascode-maestro/docker-all-in-one/docker-entrypoint.sh .
 COPY infraascode-maestro/docker-all-in-one/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 RUN chmod +x /data/docker-entrypoint.sh
-
 
 EXPOSE 80 443 8888 8000 9999
 
