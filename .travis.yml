@@ -13,6 +13,7 @@ before_install:
   - git clone https://github.com/maestro-server/analytics-maestro.git analytics-maestro/
   - git clone https://github.com/maestro-server/audit-app.git audit-app/
   - git clone https://github.com/maestro-server/websocket-app.git websocket-app/
+  - git clone https://github.com/maestro-server/infraascode-maestro.git infraascode-maestro/
 
 install:
   - npm install --prefix client-app/
@@ -28,4 +29,5 @@ script:
 after_success:
   - docker login -u $DOCKER_USER -p $DOCKER_PASS
   - docker tag standalone-maestro $DOCKER_USER/standalone-maestro:latest
+  - docker push $DOCKER_USER/standalone-maestro:latest
 
