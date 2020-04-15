@@ -62,7 +62,6 @@ After maestro use 4 secrets group,
 
 To create a secret on kubernetes run
 ``` bash
-kubectl create secret generic mongo_uri --from-env-file ./secrets/mongo_uri.txt
 kubectl create secret generic mongo_srv --from-env-file ./secrets/mongo_srv.txt
 kubectl create secret generic smtp --from-env-file ./secrets/smtp.txt
 kubectl create secret generic storage --from-env-file ./secrets/storage.txt
