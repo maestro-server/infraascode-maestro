@@ -18,6 +18,7 @@ install:
   - npm install --prefix analytics-front/
   - npm run build --prefix client-app/
   - npm run build --prefix analytics-front/
+  - npm run minify --prefix analytics-front/
   - cp docker-all-in-one/Dockerfile ./Dockerfile
 
 script:

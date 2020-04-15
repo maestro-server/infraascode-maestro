@@ -37,7 +37,7 @@ RUN npm install --only=production
 # Analytics Front
 WORKDIR /data/analytics-front/
 COPY analytics-front/ ./
-RUN npm install
+RUN npm install --only=production
 
 RUN mkdir -p /data/artifacts
 RUN mkdir -p /data/analytics-front/public
