@@ -25,9 +25,15 @@ install:
 
 script:
   - docker build -f Dockerfile -t standalone-maestro .
+  - docker build --target standalone-minimal -f Dockerfile -t standalone-maestro-minimal .
 
 after_success:
   - docker login -u $DOCKER_USER -p $DOCKER_PASS
   - docker tag standalone-maestro $DOCKER_USER/standalone-maestro:latest
+  - docker tag standalone-maestro $DOCKER_USER/standalone-maestro:$(cat version)
+  - docker tag standalone-maestro $DOCKER_USER/standalone-maestro-minimal:latest
+  - docker tag standalone-maestro $DOCKER_USER/standalone-maestro-minimal:$(cat version)
   - docker push $DOCKER_USER/standalone-maestro:latest
-
+  - docker push $DOCKER_USER/standalone-maestro:$(cat version)
+  - docker push $DOCKER_USER/standalone-maestro-minimal:latest
+  - docker push $DOCKER_USER/standalone-maestro-minimal:$(cat version)

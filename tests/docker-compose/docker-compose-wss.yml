@@ -1,0 +1,23 @@
+---
+version: '3'
+
+services:
+    maestro:
+        image: maestroserver/standalone-maestro
+        ports:
+        - 80:80
+        - 8888:8888
+        - 8000:8000
+        - 9999:9999
+        environment:
+        - SMTP_PORT=465
+        - "SMTP_PORT=25"
+        - "SMTP_HOST=maildev"
+        - "SMTP_SENDER=maestro@mysender.com"
+        - "SMTP_IGNORE=true"
+
+    maildev:
+        image: djfarrelly/maildev
+        ports:
+        - "1025:25"
+        - "1080:80"
