@@ -46,8 +46,8 @@ RUN mkdir -p /data/artifacts/graphs-bussiness
 RUN npm --prefix /data/server-app/ install bcrypt
 
 
-# =================================== Multi Stage - standalone minimal
-FROM maestroserver/standalone-maestro-minimal AS standalone-minimal
+# =================================== Multi Stage - standalone
+FROM maestroserver/standalone-maestro-services AS standalone 
 COPY --from=compiler-python /home/app/venv /home/app/venv
 COPY --from=compiler-python /data /data
 COPY --from=compiler-nodejs /data /data
@@ -64,29 +64,6 @@ COPY websocket-app/devtools/pems/server.crt /tmp/certs/server.crt
 
 COPY infraascode-maestro/docker-all-in-one/docker-entrypoint.sh /data/docker-entrypoint.sh
 RUN chmod +x /data/docker-entrypoint.sh
-
-# Entry point
-RUN useradd -s /bin/false nginx
-RUN useradd app
-RUN chown -R app:app /data/
-ENV PATH="/home/app/venv/bin:$PATH"
-WORKDIR /data/
-
-COPY infraascode-maestro/docker-all-in-one/supervisord-minimal.conf /etc/supervisor/conf.d/supervisord.conf
-
-EXPOSE 80 443 8888 8000 9999
-
-CMD ["/data/docker-entrypoint.sh"]
-
-
-# =================================== Multi Stage - standalone
-FROM maestroserver/standalone-maestro-services AS standalone 
-COPY --from=standalone-minimal /home/app/venv /home/app/venv
-COPY --from=standalone-minimal /data /data
-COPY --from=standalone-minimal /var/www /var/www
-COPY --from=standalone-minimal /etc/nginx/nginx.conf /etc/nginx/nginx.conf
-COPY --from=standalone-minimal /tmp/certs/ /tmp/certs/
-COPY --from=standalone-minimal /usr/local/bin/centrifugo  /usr/local/bin/centrifugo 
 
 # Entry point
 RUN useradd -s /bin/false nginx

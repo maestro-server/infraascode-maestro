@@ -1,0 +1,47 @@
+---
+version: '3'
+
+services:
+    maestro:
+        image: maestroserver/standalone
+        ports:
+        - 80:80
+        - 8888:8888
+        - 8000:8000
+        - 9999:9999
+        environment:
+        - "MAESTRO_MONGO_URI=mongodb://mongodb:27017"
+        - "CELERY_BROKER_URL=amqp://rabbitmq:5672"
+        - "SMTP_PORT=465"
+        - "SMTP_PORT=25"
+        - "SMTP_HOST=maildev"
+        - "SMTP_SENDER=maestro@mysender.com"
+        - "SMTP_IGNORE=true"
+        volumes:
+        - "vlm:/data/artifacts"
+        depends_on:
+        - mongodb
+        - rabbitmq
+    
+    rabbitmq:
+        image: rabbitmq:3-management
+        ports:
+        - "15672:15672"
+        - "5672:5672"
+        
+    mongodb:
+        image: mongo
+        volumes:
+        - mongodb2:/data/db
+        ports:
+        - "27018:27017"
+
+    maildev:
+        image: djfarrelly/maildev
+        ports:
+        - "1025:25"
+        - "1080:80"
+
+volumes:
+    vlm: {}
+    mongodb2: {}

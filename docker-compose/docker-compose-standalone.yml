@@ -10,27 +10,13 @@ services:
         - 8000:8000
         - 9999:9999
         environment:
-        - MAESTRO_MONGO_URI=mongodb://mongodb:27017
-        - SMTP_PORT=465
+        - "SMTP_PORT=465"
         - "SMTP_PORT=25"
         - "SMTP_HOST=maildev"
         - "SMTP_SENDER=maestro@mysender.com"
         - "SMTP_IGNORE=true"
         volumes:
-        - "artifactsa:/data/artifacts"
-    
-    rabbitmq:
-        image: rabbitmq:3-management
-        ports:
-        - "15672:15672"
-        - "5672:5672"
-        
-    mongodb:
-        image: mongo
-        volumes:
-        - mongodsrv:/data/db
-        ports:
-        - "27018:27017"
+        - "std1:/data/artifacts"
 
     maildev:
         image: djfarrelly/maildev
@@ -39,5 +25,4 @@ services:
         - "1080:80"
 
 volumes:
-    mongodsrv: {}
-    artifactsa: {}
+    std1: {}
