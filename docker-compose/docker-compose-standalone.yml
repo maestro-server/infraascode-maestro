@@ -9,20 +9,8 @@ services:
         - 8888:8888
         - 8000:8000
         - 9999:9999
-        environment:
-        - "SMTP_PORT=465"
-        - "SMTP_PORT=25"
-        - "SMTP_HOST=maildev"
-        - "SMTP_SENDER=maestro@mysender.com"
-        - "SMTP_IGNORE=true"
         volumes:
-        - "std1:/data/artifacts"
-
-    maildev:
-        image: djfarrelly/maildev
-        ports:
-        - "1025:25"
-        - "1080:80"
+        - "std1:/data/db"
 
 volumes:
     std1: {}

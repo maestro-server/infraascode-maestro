@@ -1,0 +1,38 @@
+version: '2'
+
+services:
+    client:
+        image: maestroserver/client-maestro
+        ports:
+        - "80:80"
+        environment:
+        - "API_URL=http://localhost:8888"
+        - "STATIC_URL=http://localhost:8888/static/"
+        - "ANALYTICS_URL=http://localhost:9999"
+        - "WEBSOCKET_URL=ws://localhost:8000"
+        depends_on:
+        - server    
+
+    server:
+        image: maestroserver/server-maestro
+        ports:
+        - "8888:8888"
+        environment:
+        - "MAESTRO_MONGO_URI=mongodb://mongodb"
+        - "MAESTRO_MONGO_DATABASE=maestro-client"
+        - "MAESTRO_DISCOVERY_URI=http://discovery:5000"
+        - "MAESTRO_REPORT_URI=http://reports:5005"
+        - "MAESTRO_ANALYTICS_URI=http://analytics:5020"
+        - "MAESTRO_AUDIT_URI=http://audit:10900"
+        depends_on:
+        - mongodb
+
+    ws:
+        image: maestroserver/websocket-maestro
+        ports:
+        - "8000:8000"
+        
+    mongodb:
+        image: mongo
+        ports:
+        - "27018:27017"
