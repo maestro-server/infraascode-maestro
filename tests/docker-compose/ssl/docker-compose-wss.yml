@@ -9,15 +9,14 @@ services:
         volumes:
         - "./nginx/cert.csr:/etc/nginx/conf.d/cert.csr"
         - "./nginx/cert.key:/etc/nginx/conf.d/cert.key"
-        - "./nginx/nginx.conf:/etc/nginx/nginx.conf"
+        - "./nginx/nginx2.conf:/etc/nginx/nginx.conf"
         - "./nginx/dhparam.pem:/etc/ssl/certs/dhparam.pem"
 
     client:
         image: maestroserver/client-maestro
         environment:
-        - "API_URL=http://localhost/api"
-        - "STATIC_URL=http://localhost/api/static/"
-        - "ANALYTICS_URL=http://localhost/analytics-front"
+        - "API_URL=//localhost/server-api"
+        - "STATIC_URL//localhost/server-api/static/"
         - "WEBSOCKET_URL=wss://localhost/ws"
         depends_on:
         - server    
@@ -26,17 +25,45 @@ services:
         image: maestroserver/server-maestro
         environment:
         - "MAESTRO_MONGO_URI=mongodb://mongodb"
-        - "MAESTRO_MONGO_DATABASE=maestro-client"
-        - "MAESTRO_DISCOVERY_URI=http://discovery:5000"
         - "MAESTRO_REPORT_URI=http://reports:5005"
-        - "MAESTRO_ANALYTICS_URI=http://analytics:5020"
-        - "MAESTRO_AUDIT_URI=http://audit:10900"
+        depends_on:
+        - mongodb
+
+    reports:
+        image: maestroserver/reports-maestro
+        environment:
+        - "CELERY_BROKER_URL=amqp://rabbitmq:5672"
+        - "MAESTRO_MONGO_URI=mongodb://mongodb"
+        - "MAESTRO_MONGO_DATABASE=maestro-reports"
+        depends_on:
+        - rabbitmq
+        - mongodb
+
+    reports_worker:
+        image: maestroserver/reports-maestro-celery
+        environment:
+        - "MAESTRO_REPORT_URI=http://reports:5005"
+        - "MAESTRO_DATA_URI=http://data:5010"
+        - "MAESTRO_WEBSOCKET_URI=http://ws:8000"
+        - "CELERY_BROKER_URL=amqp://rabbitmq:5672"
+        depends_on:
+        - rabbitmq
+        - data
+
+    data:
+        image: maestroserver/data-maestro
+        environment:
+        - "MAESTRO_MONGO_URI=mongodb://mongodb"
+        - "MAESTRO_MONGO_DATABASE=maestro-client"
         depends_on:
         - mongodb
 
     ws:
         image: maestroserver/websocket-maestro
-        
+
+    rabbitmq:
+        image: rabbitmq:3-management
+
     mongodb:
         image: mongo
         ports:
