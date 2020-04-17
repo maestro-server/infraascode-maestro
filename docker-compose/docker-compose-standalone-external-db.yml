@@ -3,7 +3,7 @@ version: '3'
 
 services:
     maestro:
-        image: maestroserver/standalone
+        image: maestroserver/standalone-maestro
         ports:
         - 80:80
         - 8888:8888

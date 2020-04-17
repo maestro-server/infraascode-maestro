@@ -2,22 +2,19 @@
 version: '3'
 
 services:
-    maestro:
-        image: maestroserver/standalone-maestro
+
+    nginx:
+        image: nginx
         ports:
         - 80:80
-        - 8888:8888
-        - 8000:8000
-        - 9999:9999
-        environment:
-        - SMTP_PORT=465
-        - "SMTP_PORT=25"
-        - "SMTP_HOST=maildev"
-        - "SMTP_SENDER=maestro@mysender.com"
-        - "SMTP_IGNORE=true"
+        - 443:443
+        volumes:
+        - "./nginx/cert.csr:/etc/nginx/conf.d/cert.csr"
+        - "./nginx/cert.key:/etc/nginx/conf.d/cert.key"
+        - "./nginx/nginx.conf:/etc/nginx/nginx.conf"
+        - "./nginx/dhparam.pem:/etc/ssl/certs/dhparam.pem"
 
-    maildev:
-        image: djfarrelly/maildev
-        ports:
-        - "1025:25"
-        - "1080:80"
+    maestro:
+        image: maestroserver/standalone-maestro
+        environment:
+        - "API_URL=//localhost/api"
