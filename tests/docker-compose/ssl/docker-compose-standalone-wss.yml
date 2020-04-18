@@ -17,4 +17,7 @@ services:
     maestro:
         image: maestroserver/standalone-maestro
         environment:
-        - "API_URL=//localhost/api"
+        - "API_URL=//localhost/server-api"
+        - "WEBSOCKET_URL=wss://localhost/ws"
+        - "STATIC_URL=//localhost/server-api/static/"
+        - "ANALYTICS_URL=//localhost/analytics-front"
