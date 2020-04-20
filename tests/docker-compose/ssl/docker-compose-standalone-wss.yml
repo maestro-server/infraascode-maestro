@@ -17,7 +17,7 @@ services:
     maestro:
         image: maestroserver/standalone-maestro
         environment:
-        - "API_URL=//localhost/server-api"
-        - "WEBSOCKET_URL=wss://localhost/ws"
-        - "STATIC_URL=//localhost/server-api/static/"
-        - "ANALYTICS_URL=//localhost/analytics-front"
+        - "API_URL=//localhost/server-api" # forces client and server to use this endpoint to connect to server api
+        - "WEBSOCKET_URL=wss://localhost/ws" # forces the client to connect to ws
+        - "STATIC_URL=//localhost/server-api/static/" # forces client to use this path to get static profile images
+        - "ANALYTICS_URL=//localhost/analytics-front" # forces analytics front to use this url to connect to public analytics front 

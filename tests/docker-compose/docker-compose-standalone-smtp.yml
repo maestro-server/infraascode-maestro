@@ -3,7 +3,7 @@ version: '3'
 
 services:
     maestro:
-        image: maestroserver/standalone
+        image: maestroserver/standalone-maestro
         ports:
         - 80:80
         - 8888:8888
@@ -15,6 +15,7 @@ services:
         - "SMTP_HOST=maildev"
         - "SMTP_SENDER=maestro@mysender.com"
         - "SMTP_IGNORE=true"
+        - "THEME=gold"
         volumes:
         - "vlm:/data/artifacts"
 
