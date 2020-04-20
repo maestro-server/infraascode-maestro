@@ -56,6 +56,7 @@ COPY --from=compiler-nodejs /data /data
 COPY client-app/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY client-app/dist /var/www
 COPY client-app/static /var/www/static
+COPY client-app/public/favicon.ico /var/www/favicon.ico
 
 # Centrifugo
 COPY websocket-app/devtools/centrifugo /usr/local/bin/centrifugo 
