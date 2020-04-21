@@ -1,0 +1,18 @@
+---
+version: '3'
+
+services:
+    maestro:
+        image: maestroserver/standalone-maestro
+        ports:
+        - 80:80
+        - 8888:8888
+        - 8000:8000
+        - 27017:27017
+        environment:
+        - "THEME=dark"
+        volumes:
+        - "vlm:/data/artifacts"
+
+volumes:
+    vlm: {}
