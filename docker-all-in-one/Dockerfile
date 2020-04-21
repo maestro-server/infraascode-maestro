@@ -66,6 +66,8 @@ COPY websocket-app/devtools/pems/server.crt /tmp/certs/server.crt
 COPY infraascode-maestro/docker-all-in-one/docker-entrypoint.sh /data/docker-entrypoint.sh
 RUN chmod +x /data/docker-entrypoint.sh
 
+RUN npm --prefix /data/analytics-front/ uninstall svg-to-png && npm --prefix /data/analytics-front/ install svg-to-png
+
 # Entry point
 RUN useradd -s /bin/false nginx
 RUN useradd app
