@@ -1,0 +1,22 @@
+{
+  "name": "infraascode-maestro",
+  "version": "0.6.0",
+  "description": "Maestro Server is an open source software platform for management and discovery servers, apps and system for Hybrid IT. Can manage small and large environments, be able to visualize the latest multi-cloud environment state.",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maestro-server/infraascode-maestro.git"
+  },
+  "author": "Felipe Signorini",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/maestro-server/infraascode-maestro/issues"
+  },
+  "homepage": "https://github.com/maestro-server/infraascode-maestro#readme"
+}
